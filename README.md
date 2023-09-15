@@ -134,4 +134,4 @@ it does not contain any Judge result value, it is derived from the signature via
 ## Integration
 
 Any questions you have with custom integration, please contact our support@adscore.com. Please remember that we do require adequate technical knowledge 
-in order to be able to help with the integration; there are other integration methods which does not require any, or require very little programming.
+in order to be able to help with the integration; there are other integration methods which do not require any, or require very little programming.
