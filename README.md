@@ -35,7 +35,7 @@ $cryptKey = \base64_decode("<key>");
 $signature = $_GET['signature']; /* for example */
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 /*  You might want to use X-Forwarded-For or other IP-forwarding headers coming from for example load 
-    balancing services, but make sure you trust them and they are not vulnerable to end-user modification! */
+    balancing services, but make sure you trust them and they are not vulnerable to user modification! */
 $ipAddresses = [ $_SERVER['REMOTE_ADDR'] ]; 
 
 try {
@@ -43,7 +43,7 @@ try {
     /*  Result contains numerical result value */
     $result = $parser->getResult();
     /*  Judge is the module evaluating final result in the form of single score. RESULTS constant 
-        in its definition contains array with human-readable descriptions of every numerical result, if needed. */
+        contains array with human-readable descriptions of every numerical result, if needed. */
     $humanReadable = Judge::RESULTS[$result];
     print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
 } catch (VersionException $e) {
