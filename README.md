@@ -26,28 +26,31 @@ incoming traffic for being organic and valuable, but do not carry any additional
 	Those keys are base64-encoded and the library expects raw binary, so we need to decode it now. */
 $cryptKey = \base64_decode("<key>");
 
-/*	Three things are necessary to verify the signature - at least one IP address, User Agent string and the signature itself. */
+/*	Three things are necessary to verify the signature - at least one IP address, User Agent string 
+	and the signature itself. */
 $signature = $_GET['signature']; /* for example */
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-/* 	You might want to use X-Forwarded-For or other IP-forwarding headers coming from for example load balancing services, but make sure you trust them 
-	and they are not vulnerable to end-user modification! */
+/* 	You might want to use X-Forwarded-For or other IP-forwarding headers coming from for example load 
+	balancing services, but make sure you trust them and they are not vulnerable to end-user modification! */
 $ipAddresses = [ $_SERVER['REMOTE_ADDR'] ]; 
 
 try {
 	$parser = \AdScore\Common\Signature\Signature4::createFromRequest($signature, $ipAddresses, $userAgent, $cryptKey);
 	/* 	Result contains numerical result value */
 	$result = $parser->getResult();
-	/* 	Judge is the module evaluating final result in the form of single score. RESULTS constant in its definition contains array with human-readable
-		descriptions of every numerical result, if needed. */
+	/* 	Judge is the module evaluating final result in the form of single score. RESULTS constant 
+		in its definition contains array with human-readable descriptions of every numerical result, if needed. */
 	$humanReadable = \AdScore\Common\Definition\Judge::RESULTS[$result];
 	print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
 } catch (\AdScore\Common\Signature\Exception\VersionException $e) {
-	/* 	It means that the signature is not the V4 one, check your zone settings and ensure the signatures are coming from the chosen zone. */
+	/* 	It means that the signature is not the V4 one, check your zone settings and ensure the signatures 
+		are coming from the chosen zone. */
 } catch (\AdScore\Common\Signature\Exception\ParseException $e) {
-	/* 	It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, check for corruption underway. */
+	/* 	It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, 
+		check for corruption underway. */
 } catch (\AdScore\Common\Signature\Exception\VerifyException $e) {
-	/* 	Signature could not be verified - usually this is a matter of IP / user agent mismatch (or spoofing). They must be bit-exact, so even
-		excessive whitespace or casing change can trigger the problem. */
+	/* 	Signature could not be verified - usually this is a matter of IP / user agent mismatch (or spoofing). 
+		They must be bit-exact, so even excessive whitespace or casing change can trigger the problem. */
 }
 
 ```
@@ -77,12 +80,13 @@ try {
 	$humanReadable = \AdScore\Common\Definition\Judge::RESULTS[$result];
 	print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
 } catch (\AdScore\Common\Signature\Exception\VersionException $e) {
-	/* 	It means that the signature is not the V5 one, check your zone settings and ensure the signatures are coming from the chosen zone. */
+	/* 	It means that the signature is not the V5 one, check your zone settings and ensure the signatures 
+		are coming from the chosen zone. */
 } catch (\AdScore\Common\Signature\Exception\ParseException $e) {
-	/* 	It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, check for corruption underway. */
+	/* 	It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, 
+		check for corruption underway. */
 } catch (\AdScore\Common\Signature\Exception\VerifyException $e) {
-	/* 	Signature could not be verified - usually this is a matter of IP / user agent mismatch (or spoofing). They must be bit-exact, so even
-		excessive whitespace or casing change can trigger the problem. */
+	/* 	Signature could not be verified - see error message for details. */
 }
 
 ```
@@ -125,7 +129,7 @@ $result = $parser->getResult();
 The `result` field and its associated `getResult()` getter method return result score only after a successful `verify()` call. This is expected behavior,
 to preserve compliance with V4 behavior - the result is only valid when it's proven belonging to a visitor.
 For custom integrations not relying on built-in verification routines (usually more tolerant), the result is present also in payload retrieved via 
-`getPayload()` call, but it's then the integrator reponsibility to ensure whether it's trusted or not. When integration is more strict than the built-in
+`getPayload()` call, but it's then the integrator's reponsibility to ensure whether it's trusted or not. When desired validation is more strict than the built-in
 one, the `verify()` can be called first, populating `getResult()` value, and after that any additional verification may take place.
 
 Note: V4 signature parser also holds the payload, but it does not contain any useful informations, only timestamps and signed strings; especially - 
