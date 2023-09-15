@@ -1,0 +1,36 @@
+{
+    "name": "adscore/php-common",
+    "description": "PHP client library for Adscore",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bartosz Derleta",
+            "email": "bartosz@derleta.com",
+            "role": "Developer"
+        }
+    ],
+    "homepage": "https://adscore.com",
+    "support": {
+		"email": "support@adscore.com"
+	},
+    "keywords": [
+        "adscore"
+    ],
+    "homepage": "https://github.com/Adscore/php-common",
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=7.4.0",
+        "ext-openssl": ">=7.4.0",
+        "ext-hash": ">=7.4.0"
+    },
+    "suggest": {
+		"ext-igbinary": "Required to support igbinary-encoded v5 signatures",
+		"ext-msgpack": "Required to support msgpack-encoded v5 signatures",
+		"ext-sodium": "Required to support sodium-based encryption algorithms"
+	},
+    "autoload": {
+        "psr-4": {
+            "AdScore\\Common\\": "src"
+        }
+    }
+}
