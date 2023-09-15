@@ -23,34 +23,34 @@ incoming traffic for being organic and valuable, but do not carry any additional
 ``` php
 
 /*  Replace <key> with "Zone Response Key" which you might find in "Zone Encryption" page for given zone. 
-	Those keys are base64-encoded and the library expects raw binary, so we need to decode it now. */
+    Those keys are base64-encoded and the library expects raw binary, so we need to decode it now. */
 $cryptKey = \base64_decode("<key>");
 
-/*	Three things are necessary to verify the signature - at least one IP address, User Agent string 
-	and the signature itself. */
+/*  Three things are necessary to verify the signature - at least one IP address, User Agent string 
+    and the signature itself. */
 $signature = $_GET['signature']; /* for example */
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-/* 	You might want to use X-Forwarded-For or other IP-forwarding headers coming from for example load 
-	balancing services, but make sure you trust them and they are not vulnerable to end-user modification! */
+/*  You might want to use X-Forwarded-For or other IP-forwarding headers coming from for example load 
+    balancing services, but make sure you trust them and they are not vulnerable to end-user modification! */
 $ipAddresses = [ $_SERVER['REMOTE_ADDR'] ]; 
 
 try {
-	$parser = \AdScore\Common\Signature\Signature4::createFromRequest($signature, $ipAddresses, $userAgent, $cryptKey);
-	/* 	Result contains numerical result value */
-	$result = $parser->getResult();
-	/* 	Judge is the module evaluating final result in the form of single score. RESULTS constant 
-		in its definition contains array with human-readable descriptions of every numerical result, if needed. */
-	$humanReadable = \AdScore\Common\Definition\Judge::RESULTS[$result];
-	print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
+    $parser = \AdScore\Common\Signature\Signature4::createFromRequest($signature, $ipAddresses, $userAgent, $cryptKey);
+    /*  Result contains numerical result value */
+    $result = $parser->getResult();
+    /*  Judge is the module evaluating final result in the form of single score. RESULTS constant 
+        in its definition contains array with human-readable descriptions of every numerical result, if needed. */
+    $humanReadable = \AdScore\Common\Definition\Judge::RESULTS[$result];
+    print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
 } catch (\AdScore\Common\Signature\Exception\VersionException $e) {
-	/* 	It means that the signature is not the V4 one, check your zone settings and ensure the signatures 
-		are coming from the chosen zone. */
+    /*  It means that the signature is not the V4 one, check your zone settings and ensure the signatures 
+        are coming from the chosen zone. */
 } catch (\AdScore\Common\Signature\Exception\ParseException $e) {
-	/* 	It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, 
-		check for corruption underway. */
+    /*  It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, 
+        check for corruption underway. */
 } catch (\AdScore\Common\Signature\Exception\VerifyException $e) {
-	/* 	Signature could not be verified - usually this is a matter of IP / user agent mismatch (or spoofing). 
-		They must be bit-exact, so even excessive whitespace or casing change can trigger the problem. */
+    /*  Signature could not be verified - usually this is a matter of IP / user agent mismatch (or spoofing). 
+        They must be bit-exact, so even excessive whitespace or casing change can trigger the problem. */
 }
 
 ```
@@ -75,18 +75,18 @@ $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $ipAddresses = [ $_SERVER['REMOTE_ADDR'] ]; 
 
 try {
-	$parser = \AdScore\Common\Signature\Signature5::createFromRequest($signature, $ipAddresses, $userAgent, $cryptKey);
-	$result = $parser->getResult();
-	$humanReadable = \AdScore\Common\Definition\Judge::RESULTS[$result];
-	print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
+    $parser = \AdScore\Common\Signature\Signature5::createFromRequest($signature, $ipAddresses, $userAgent, $cryptKey);
+    $result = $parser->getResult();
+    $humanReadable = \AdScore\Common\Definition\Judge::RESULTS[$result];
+    print $humanReadable['verdict'] . ' (' . $humanReadable['name'] . ')';
 } catch (\AdScore\Common\Signature\Exception\VersionException $e) {
-	/* 	It means that the signature is not the V5 one, check your zone settings and ensure the signatures 
-		are coming from the chosen zone. */
+    /*  It means that the signature is not the V5 one, check your zone settings and ensure the signatures 
+        are coming from the chosen zone. */
 } catch (\AdScore\Common\Signature\Exception\ParseException $e) {
-	/* 	It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, 
-		check for corruption underway. */
+    /*  It means that the signature metadata is malformed and cannot be parsed, or contains invalid data, 
+        check for corruption underway. */
 } catch (\AdScore\Common\Signature\Exception\VerifyException $e) {
-	/* 	Signature could not be verified - see error message for details. */
+    /*  Signature could not be verified - see error message for details. */
 }
 
 ```
@@ -103,22 +103,22 @@ so here is the extended example (without any exception handling for readability)
 ``` php
 
 $signature = $_GET['signature'];
-/*	An example structure holding keys for every zone supported */
+/*  An example structure holding keys for every zone supported */
 $cryptKeys = [
-	123 => \base64_decode("123456789abcdefghijklmn")
+    123 => \base64_decode("123456789abcdefghijklmn")
 ];
 
 $parser = new \AdScore\Common\Signature\Signature5();
-/* 	Parsing/decryption stage */
+/*  Parsing/decryption stage */
 $parser->parse($signature, function ($zoneId) use ($cryptKeys) {
-	if (!isset($cryptKeys[$zoneId])) {
-		throw new RuntimeException('Unsupported zone ' . $zoneId);
-	}
-	return $cryptKeys[$zoneId];
+    if (!isset($cryptKeys[$zoneId])) {
+        throw new RuntimeException('Unsupported zone ' . $zoneId);
+    }
+    return $cryptKeys[$zoneId];
 });
-/* 	The payload now contains a decrypted signature data which might be used to verify the signature */
+/*  The payload now contains a decrypted signature data which might be used to verify the signature */
 $payload = $parser->getPayload();
-/* 	We can still make use of built-in signature validator and only then getResult() is being populated */
+/*  We can still make use of built-in signature validator and only then getResult() is being populated */
 $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
 $ipAddresses = [ $_SERVER['REMOTE_ADDR'] ]; 
 $parser->verify($ipAddresses, $userAgent);
