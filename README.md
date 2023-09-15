@@ -99,7 +99,7 @@ so here is the extended example (without any exception handling for readability)
 ``` php
 
 $signature = $_GET['signature'];
-/*	An example structure holding keys for every zone supported
+/*	An example structure holding keys for every zone supported */
 $cryptKeys = [
 	123 => \base64_decode("123456789abcdefghijklmn")
 ];
