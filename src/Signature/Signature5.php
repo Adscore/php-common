@@ -84,8 +84,8 @@ class Signature5 extends AbstractSignature {
         foreach ($ipAddresses as $ipAddress) {
             $nIpAddress = \inet_pton($ipAddress);
             if (
-                (isset($this->payload['ipv4.ip']) && ($this->bytesEquals($nIpAddress, \inet_pton($this->payload['ipv4.ip']), $this->payload['ipv4.v'] ?? 4))) ||     
-                (isset($this->payload['ipv6.ip']) && ($this->bytesEquals($nIpAddress, \inet_pton($this->payload['ipv6.ip']), $this->payload['ipv6.v'] ?? 16)))   
+                (isset($this->payload['ipv4.ip']) && ($this->bytesCompare($nIpAddress, \inet_pton($this->payload['ipv4.ip']), $this->payload['ipv4.v'] ?? 4))) ||     
+                (isset($this->payload['ipv6.ip']) && ($this->bytesCompare($nIpAddress, \inet_pton($this->payload['ipv6.ip']), $this->payload['ipv6.v'] ?? 16)))   
             ) {
                 $matchingIp = $ipAddress;
                 break;

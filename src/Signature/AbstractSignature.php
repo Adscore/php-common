@@ -73,7 +73,7 @@ abstract class AbstractSignature {
      * @param int $n
      * @return bool
      */
-    public function bytesEquals(string $known, string $user, int $n) : bool {
+    public function bytesCompare(string $known, string $user, int $n) : bool {
         if ((\strlen($known) < $n) || (\strlen($user) < $n)) {
             return false;
         }
