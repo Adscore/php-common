@@ -137,7 +137,7 @@ class Signature4 extends AbstractSignature {
 				$meta = \is_array($meta) ? $meta : [];
 				$signatureBase = $this->getHashBase($result, $this->payload['requestTime'], $this->payload['signatureTime'], $ipAddress, $userAgent);
 				switch ($signType) {
-					case SignatureType::HASH_SHA256 :
+					case static::HASH_SHA256 :
 						$xToken = $this->hashData($signatureBase, $cryptKey, 'sha256');
 						if (\hash_equals($xToken, $token)) {
 							$this->verificationData = [
@@ -150,7 +150,7 @@ class Signature4 extends AbstractSignature {
                             return true;
                         }
 						break;
-					case SignatureType::SIGN_SHA256 :
+					case static::SIGN_SHA256 :
 						$xValid = $this->verifyData($signatureBase, $token, $cryptKey, 'sha256');
 						if ($xValid) {
 							$this->verificationData = [
@@ -196,9 +196,9 @@ class Signature4 extends AbstractSignature {
 			return null;
         }
 		$signType = $this->payload[$signRole . 'SignType'];
-		$signatureBase = $this->getBase($result, $this->payload['requestTime'], $this->payload['signatureTime'], $ipAddress, $userAgent);
+		$signatureBase = $this->getHashBase($result, $this->payload['requestTime'], $this->payload['signatureTime'], $ipAddress, $userAgent);
 		switch ($signType) {
-			case SignatureType::HASH_SHA256 :
+			case static::HASH_SHA256 :
 				$xToken = $this->hashData($signatureBase, $key, 'sha256');
 				if (\hash_equals($xToken, $this->payload[$signRole . 'TokenV6'])) {
 					return $ipAddress;
