@@ -144,7 +144,7 @@ class Signature4 extends AbstractSignature {
                                 'verdict' => $meta['verdict'] ?? null, 
                                 'result' => $result, 
                                 "ipv{$v}.ip" => $ipAddress, 
-                                'embeddedIpV6' => $this->verifyEmbeddedIpv6($this->payload, $result, $cryptKey, $userAgent, $signRole)
+                                'embeddedIpV6' => $this->verifyEmbeddedIpv6($result, $cryptKey, $userAgent, $signRole)
                             ];
                             $this->result = $result;
                             return true;
@@ -157,7 +157,7 @@ class Signature4 extends AbstractSignature {
                                 'verdict' => $meta['verdict'] ?? null, 
                                 'result' => $result, 
                                 "ipv{$v}.ip" => $ipAddress, 
-                                'embeddedIpV6' => $this->verifyEmbeddedIpv6($this->payload, $result, $cryptKey, $userAgent, $signRole)
+                                'embeddedIpV6' => $this->verifyEmbeddedIpv6($result, $cryptKey, $userAgent, $signRole)
                             ];
                             $this->result = $result;
                             return true;
