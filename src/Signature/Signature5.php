@@ -23,7 +23,8 @@ class Signature5 extends AbstractSignature {
     protected const HEADER_LENGTH = 11;
 
     protected ?array $payload;
-
+    protected ?int $zoneId;
+    
     /**
      * Creates a new signature envelope
      * @param int|null $zoneId
