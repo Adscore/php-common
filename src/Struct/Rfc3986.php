@@ -32,7 +32,6 @@ class Rfc3986 extends AbstractStruct {
         /* The application/x-www-form-urlencoded parser takes a byte sequence input, and then runs these steps: */
         $input = parent::unpack($data);
         /* 1. Let output be an initially empty list of name-value tuples where both name and value hold a string. */
-        /* @internal we do not expect duplicate keys nor we need them */
         $output = [];
         /* 2. Let sequences be the result of splitting input on 0x26 (&). */
         $sequences = explode('&', $input);
