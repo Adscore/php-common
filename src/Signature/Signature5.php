@@ -22,6 +22,9 @@ class Signature5 extends AbstractSignature {
     public const VERSION = 5;
     protected const HEADER_LENGTH = 11;
 
+    private const IPV4_SIZE = 4;
+    private const IPV6_SIZE = 16;
+    
     protected ?array $payload;
     protected ?int $zoneId;
     
@@ -82,11 +85,17 @@ class Signature5 extends AbstractSignature {
     public function verify(array $ipAddresses, string $userAgent): bool {
         $matchingIp = null;
         foreach ($ipAddresses as $ipAddress) {
+            /* Some encoding methods like Rfc3986 don't preserve data types, hence typecasting is necessary */
+            $bytesToCompareV4 = isset($this->payload['ipv4.v']) ? intval($this->payload['ipv4.v']) : self::IPV4_SIZE;
+            $bytesToCompareV6 = isset($this->payload['ipv6.v']) ? intval($this->payload['ipv6.v']) : self::IPV6_SIZE;
             $nIpAddress = \inet_pton($ipAddress);
-            if (
-                (isset($this->payload['ipv4.ip']) && ($this->bytesCompare($nIpAddress, \inet_pton($this->payload['ipv4.ip']), $this->payload['ipv4.v'] ?? 4))) ||     
-                (isset($this->payload['ipv6.ip']) && ($this->bytesCompare($nIpAddress, \inet_pton($this->payload['ipv6.ip']), $this->payload['ipv6.v'] ?? 16)))   
-            ) {
+            if ((
+                isset($this->payload['ipv4.ip']) && 
+                ($this->bytesCompare($nIpAddress, \inet_pton($this->payload['ipv4.ip']), $bytesToCompareV4))
+            ) || (
+                isset($this->payload['ipv6.ip']) && 
+                ($this->bytesCompare($nIpAddress, \inet_pton($this->payload['ipv6.ip']), $bytesToCompareV6))
+            )) {
                 $matchingIp = $ipAddress;
                 break;
             }

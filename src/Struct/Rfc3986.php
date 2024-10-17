@@ -55,7 +55,7 @@ class Rfc3986 extends AbstractStruct {
             }
             /* Replace any 0x2B (+) in name and value with 0x20 (SP). */
             $name = strtr($name, '+', ' ');
-            $value = strtr($name, '+', ' ');
+            $value = strtr($value, '+', ' ');
             /* Let nameString and valueString be the result of running UTF-8 decode without BOM on the percent-decoding
              * of name and value, respectively. */
             $nameString = rawurldecode($name);
