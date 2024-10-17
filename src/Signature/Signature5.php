@@ -86,8 +86,10 @@ class Signature5 extends AbstractSignature {
         $matchingIp = null;
         foreach ($ipAddresses as $ipAddress) {
             /* Some encoding methods like Rfc3986 don't preserve data types, hence typecasting is necessary */
-            $bytesToCompareV4 = isset($this->payload['ipv4.v']) ? intval($this->payload['ipv4.v']) : self::IPV4_SIZE;
-            $bytesToCompareV6 = isset($this->payload['ipv6.v']) ? intval($this->payload['ipv6.v']) : self::IPV6_SIZE;
+            $bytesToCompareV4 = (isset($this->payload['ipv4.v']) && is_numeric($this->payload['ipv4.v'])) ? 
+                intval($this->payload['ipv4.v']) : self::IPV4_SIZE;
+            $bytesToCompareV6 = (isset($this->payload['ipv6.v']) && is_numeric($this->payload['ipv6.v'])) ? 
+                intval($this->payload['ipv6.v']) : self::IPV6_SIZE;
             $nIpAddress = \inet_pton($ipAddress);
             if ((
                 isset($this->payload['ipv4.ip']) && 
