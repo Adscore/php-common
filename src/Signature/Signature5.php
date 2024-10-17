@@ -11,6 +11,7 @@ use AdScore\Common\Signature\Exception\ParseException;
 use AdScore\Common\Signature\Exception\VersionException;
 use AdScore\Common\Signature\Exception\VerifyException;
 use Closure;
+use InvalidArgumentException;
 
 /**
  * Signature v5 envelope/parser
@@ -139,7 +140,11 @@ class Signature5 extends AbstractSignature {
      */
     public function parse(string $signature, Closure $onCryptKeyRequest, ?AbstractFormatter $formatter = null): void {
         $formatter ??= $this->getDefaultFormatter();
-        $payload = $formatter->parse($signature);
+        try {
+            $payload = $formatter->parse($signature);
+        } catch (InvalidArgumentException $e) {
+            throw new ParseException('Malformed signature', 0, $e);
+        }
         if (\strlen($payload) <= self::HEADER_LENGTH) {
             throw new ParseException('Malformed signature', 1);
         }
